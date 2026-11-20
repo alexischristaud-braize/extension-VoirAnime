@@ -6,14 +6,14 @@ chrome.runtime.onInstalled.addListener(() => {
     id: "addAnime",
     title: "Add as new",
     contexts: ["link"],
-    targetUrlPatterns: ["https://voir-anime.to/anime/*"],
+    targetUrlPatterns: ["https://voiranime.cx/anime/*"],
   });
 
   chrome.contextMenus.create({
     id: "addAnimeToWatch",
     title: "Add to Watch List",
     contexts: ["link"],
-    targetUrlPatterns: ["https://voir-anime.to/anime/*"],
+    targetUrlPatterns: ["https://voiranime.cx/anime/*"],
   });
 });
 
@@ -81,6 +81,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     );
     return true;
   }
+
+  if (msg.action === "updateParameter") {
+    console.log("Background : parameters update");
+    updateParameter(msg.data.title, msg.data.value).then(() =>
+      sendResponse({ status: "ok" }),
+    );
+    return true;
+  }
+
+  if (msg.action === "getParameter") {
+    console.log("Background : get parameter : " + msg.data);
+    getParameter(msg.data).then((data) =>
+      sendResponse({ status: "ok", data }),
+    );
+    return true;
+  }
+
+
+
+
 });
 
 chrome.commands.onCommand.addListener((command) => {

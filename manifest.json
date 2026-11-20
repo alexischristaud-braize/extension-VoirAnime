@@ -46,12 +46,12 @@
 
   "content_scripts": [
     {
-      "matches": ["https://voir-anime.to/anime/*"],
+      "matches": ["https://voiranime.cx/anime/*"],
       "js": ["content.js"],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://voir-anime.to/*"],
+      "matches": ["https://voiranime.cx/*"],
       "js": ["contentHub.js"],
       "run_at": "document_idle"
     },

@@ -1,6 +1,6 @@
 // db.js
 const DB_NAME = "VoirAnimeDB";
-const DB_VERSION = 1;
+const DB_VERSION = 3;
 
 /**
  * Ouvre la base IndexedDB
@@ -14,6 +14,13 @@ function openDB() {
       const db = e.target.result;
       if (!db.objectStoreNames.contains("anime")) {
         const store = db.createObjectStore("anime", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+        store.createIndex("title", "title", { unique: false });
+      }
+      if (!db.objectStoreNames.contains("parameter")) {
+        const store = db.createObjectStore("parameter", {
           keyPath: "id",
           autoIncrement: true,
         });
@@ -61,7 +68,7 @@ function safeSendMessage(msg) {
  * @property {boolean} anime.toWatch - Défini à true automatiquement.
  * @property {number} anime.episode - Initialisé à 0.
  */
-async function  addToWatch(anime) {
+async function addToWatch(anime) {
   const db = await openDB();
   const tx = db.transaction("anime", "readwrite");
   const store = tx.objectStore("anime");
@@ -168,9 +175,7 @@ async function addAnimeToDB(anime) {
       request.onerror = (e) => reject(e.target.error);
     });
 
-    console.log(
-      `Anime "${anime.title}" mis à jour à l'épisode ${anime.episode}`,
-    );
+    console.log(`Anime "${anime.title}" mis à jour à l'épisode ${anime.episode}`);
 
     safeSendMessage({
       action: "edited-anime",
@@ -184,9 +189,7 @@ async function addAnimeToDB(anime) {
       request.onerror = (e) => reject(e.target.error);
     });
 
-    console.log(
-      `Anime "${anime.title}" ajouté avec l'épisode ${anime.episode}`,
-    );
+    console.log(`Anime "${anime.title}" ajouté avec l'épisode ${anime.episode}`);
 
     safeSendMessage({
       action: "added-anime",
@@ -342,6 +345,46 @@ async function switchStatut(title, statut, value) {
   });
   updateBadge();
 
-
   console.log("BD : end switch");
+}
+
+async function updateParameter(title, value) {
+  console.log("BD : start update");
+  const db = await openDB();
+  const tx = db.transaction("parameter", "readwrite");
+  const store = tx.objectStore("parameter");
+
+  await new Promise((resolve, reject) => {
+    const lookup = store.index("title").get(title);
+    lookup.onsuccess = () => {
+      const existing = lookup.result;
+      const request = store.put(
+        existing ? { ...existing, value: value } : { title: title, value: value }
+      );
+      request.onsuccess = (e) => resolve(e.target.result);
+      request.onerror = (e) => reject(e.target.error);
+    };
+    lookup.onerror = (e) => reject(e.target.error);
+  });
+
+  console.log(`Parametre "${title}" mis à jour à la valeur ${value}`);
+  console.log("BD : end update");
+  return tx.complete;
+}
+
+async function getParameter(title) {
+  console.log("BD : start get parameter");
+  const db = await openDB();
+  const tx = db.transaction("parameter", "readonly");
+  const store = tx.objectStore("parameter");
+
+  const parameter = await new Promise((resolve, reject) => {
+    const request = store.index("title").get(title);
+    request.onsuccess = (e) => resolve(e.target.result);
+    request.onerror = (e) => reject(e.target.error);
+  });
+
+  console.log(`Parametre "${title}" récuperer`);
+  console.log("BD : end get");
+  return parameter;
 }

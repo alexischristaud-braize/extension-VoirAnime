@@ -6,8 +6,7 @@ chrome.runtime.onMessage.addListener((msg) => {
     const el = createAnimeElement(anime);
 
     const animeListContainer = document.getElementById("anime-list");
-    const animeHiddenListContainer =
-      document.getElementById("hidden-anime-list");
+    const animeHiddenListContainer = document.getElementById("hidden-anime-list");
 
     // si principal → liste principale
     if (anime.principal) {
@@ -38,10 +37,7 @@ const hiddenContent = document.getElementById("hidden-anime-list");
 toggleBtn.addEventListener("click", function (e) {
   e.preventDefault(); // empêche le reload
 
-  if (
-    hiddenContent.style.display === "none" ||
-    hiddenContent.style.display === ""
-  ) {
+  if (hiddenContent.style.display === "none" || hiddenContent.style.display === "") {
     hiddenContent.style.display = "block";
     toggleBtn.innerHTML = `Voir moins
                               <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -261,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (anime.nouveau == true) {
             chrome.runtime.sendMessage({
               action: "switchStatut",
-              data: { title: anime.title, statut : "nouveau", value : false },
+              data: { title: anime.title, statut: "nouveau", value: false },
             });
           }
         });

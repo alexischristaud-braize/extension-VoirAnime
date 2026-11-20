@@ -104,7 +104,8 @@ body {
   border-color: white;
 }
 
-#anime-conteneur, #watch-conteneur {
+#anime-conteneur,
+#watch-conteneur {
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 400px;
@@ -115,22 +116,26 @@ body {
 }
 
 /* Chrome / Edge */
-#anime-conteneur::-webkit-scrollbar, #watch-conteneur::-webkit-scrollbar {
+#anime-conteneur::-webkit-scrollbar,
+#watch-conteneur::-webkit-scrollbar {
   width: 8px;
 }
 
-#anime-conteneur::-webkit-scrollbar-track, #watch-conteneur::-webkit-scrollbar-track{
+#anime-conteneur::-webkit-scrollbar-track,
+#watch-conteneur::-webkit-scrollbar-track {
   background: #1e1e1e;
   border-radius: 10px;
 }
 
-#anime-conteneur::-webkit-scrollbar-thumb, #watch-conteneur::-webkit-scrollbar-thumb{
+#anime-conteneur::-webkit-scrollbar-thumb,
+#watch-conteneur::-webkit-scrollbar-thumb {
   background: #7289da;
   border-radius: 10px;
   border: 2px solid #1e1e1e;
 }
 
-#anime-conteneur::-webkit-scrollbar-thumb:hover, #watch-conteneur::-webkit-scrollbar-thumb:hover{
+#anime-conteneur::-webkit-scrollbar-thumb:hover,
+#watch-conteneur::-webkit-scrollbar-thumb:hover {
   background: #8ea1ff;
 }
 

@@ -27,10 +27,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       link = links[1];
     }
 
-    const title =
-      link.getAttribute("title")?.trim() ||
-      link.textContent?.trim() ||
-      "Titre inconnu";
+    const title = link.getAttribute("title")?.trim() || link.textContent?.trim() || "Titre inconnu";
 
     sendResponse({ title });
   }
@@ -92,21 +89,10 @@ if (breadcrumb.length == 3 && boutons) {
   });
 }
 
-function injectBookmark(
-  itemElement,
-  title,
-  link,
-  isSaved,
-  favFull,
-  favEmpty,
-  animeByTitle,
-) {
+function injectBookmark(itemElement, title, link, isSaved, favFull, favEmpty, animeByTitle) {
   if (!itemElement || !title) return;
 
-  const target =
-    itemElement.querySelector(".meta-item") ||
-    itemElement.querySelector(".asp_content h3") ||
-    itemElement;
+  const target = itemElement.querySelector(".meta-item") || itemElement.querySelector(".asp_content h3") || itemElement;
 
   if (target !== itemElement) {
     target.style.display = "flex";
@@ -173,13 +159,7 @@ if (animeConteneur) {
   let animeByTitle = {};
 
   function getSearchItems() {
-    return Array.from(
-      document.querySelectorAll(
-        ".asp_r_pagepost.item, .item.asp_r_pagepost, .results .item, .item-summary",
-      ),
-    ).filter((item) =>
-      Boolean(item.querySelector(".asp_res_url, .post-title a")),
-    );
+    return Array.from(document.querySelectorAll(".asp_r_pagepost.item, .item.asp_r_pagepost, .results .item, .item-summary")).filter((item) => Boolean(item.querySelector(".asp_res_url, .post-title a")));
   }
 
   function renderSearchBookmarks() {
@@ -188,23 +168,12 @@ if (animeConteneur) {
       const title = titleEl?.textContent?.trim();
       if (!title) return;
 
-      const link =
-        titleEl.closest("a")?.href ||
-        itemElement.querySelector("a")?.href ||
-        window.location.href;
+      const link = titleEl.closest("a")?.href || itemElement.querySelector("a")?.href || window.location.href;
       const isSaved = Boolean(animeByTitle[title]);
       const alreadyInjected = itemElement.dataset.bookmarkInjected === "true";
 
       if (!alreadyInjected) {
-        injectBookmark(
-          itemElement,
-          title,
-          link,
-          isSaved,
-          favFull,
-          favEmpty,
-          animeByTitle,
-        );
+        injectBookmark(itemElement, title, link, isSaved, favFull, favEmpty, animeByTitle);
         itemElement.dataset.bookmarkInjected = "true";
       } else {
         const icon = itemElement.querySelector(".fav-icon");
@@ -230,10 +199,7 @@ if (animeConteneur) {
             shouldRender = true;
             break;
           }
-          if (
-            node.querySelector &&
-            node.querySelector(".asp_r_pagepost, .item, .results")
-          ) {
+          if (node.querySelector && node.querySelector(".asp_r_pagepost, .item, .results")) {
             shouldRender = true;
             break;
           }
@@ -249,9 +215,7 @@ if (animeConteneur) {
   }
 
   chrome.runtime.sendMessage({ action: "getAllAnime" }, (response) => {
-    if (
-      !(response && response.status === "ok" && Array.isArray(response.data))
-    ) {
+    if (!(response && response.status === "ok" && Array.isArray(response.data))) {
       console.warn("Pas de réponse du background ou erreur", response);
       return;
     }
@@ -260,26 +224,7 @@ if (animeConteneur) {
       if (anime?.title) animeByTitle[anime.title] = anime;
     });
 
-    animesNotes.forEach((element) => {
-      const titleElement = element.querySelector(".post-title a");
-      if (!titleElement) return;
-      const title = titleElement.textContent?.trim();
-      if (!title) return;
-      const link = titleElement.href;
-      const metaItem = element.querySelector(".meta-item");
-      if (!metaItem) return;
-
-      metaItem.style.display = "flex";
-      injectBookmark(
-        metaItem,
-        title,
-        link,
-        Boolean(animeByTitle[title]),
-        favFull,
-        favEmpty,
-        animeByTitle,
-      );
-    });
+    animesNotes.forEach(D);
 
     const searchInputs = document.querySelectorAll('input[type="search"]');
     let debounceTimeout;
